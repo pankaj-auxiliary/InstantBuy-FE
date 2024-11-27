@@ -11,7 +11,7 @@ export const useAuth = () => {
 
   const login = useCallback(
     (email: string, password: string) => {
-      // dispatch(loginRequest({ email, password }));
+      dispatch(loginRequest({ email, password }));
     },
     [dispatch]
   );

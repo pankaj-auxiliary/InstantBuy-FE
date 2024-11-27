@@ -1,13 +1,16 @@
-import { Navigate, useLocation } from 'react-router-dom';
-import { useAuth } from '../../context/AuthContext';
-import { UserRole } from '../../types/auth';
+import { Navigate, useLocation } from "react-router-dom";
+import { useAuth } from "../../context/AuthContext";
+import { UserRole } from "../../features/user/types";
 
 interface ProtectedRouteProps {
   children: React.ReactNode;
   allowedRoles?: UserRole[];
 }
 
-export default function ProtectedRoute({ children, allowedRoles }: ProtectedRouteProps) {
+export default function ProtectedRoute({
+  children,
+  allowedRoles,
+}: ProtectedRouteProps) {
   const { isAuthenticated, user, loading } = useAuth();
   const location = useLocation();
 
@@ -25,7 +28,7 @@ export default function ProtectedRoute({ children, allowedRoles }: ProtectedRout
 
   if (allowedRoles && user && !allowedRoles.includes(user.role)) {
     // Redirect to appropriate homepage based on user role
-    const redirectPath = user.role === 'seller' ? '/seller' : '/';
+    const redirectPath = user.role === "seller" ? "/seller" : "/";
     return <Navigate to={redirectPath} replace />;
   }
 

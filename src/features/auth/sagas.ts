@@ -1,31 +1,59 @@
-import { call, put, takeLatest } from 'redux-saga/effects';
-import { PayloadAction } from '@reduxjs/toolkit';
-import { loginRequest, loginSuccess, loginFailure } from './slice';
-import { User } from '../../types/auth';
+import { call, put, takeLatest } from "redux-saga/effects";
+import {
+  loginRequest,
+  loginSuccess,
+  loginFailure,
+  signupRequest,
+} from "./slice";
+import { User, UserRole } from "../user/types";
+import { loginApi, signUpApi } from "./api";
+import { PayloadAction } from "@reduxjs/toolkit";
+import { toastService } from "../../services/ToastServices";
+import { localStorageService } from "../../services/LocalStorageService";
+import { history } from "../../app/store";
 
-// Simulated API call
-const delay = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
-
-function* loginSaga(action: PayloadAction<{ email: string; password: string }>) {
+function* loginSaga(action: PayloadAction<Partial<User>>): any {
   try {
     // Simulate API call
-    yield call(delay, 1000);
-    
-    // Mock user data
-    const user: User = {
-      id: '1',
-      name: 'John Doe',
-      email: action.payload.email,
-      role: 'buyer',
-      phone: '+1 (555) 123-4567',
-    };
-    
-    yield put(loginSuccess(user));
-  } catch (error) {
-    yield put(loginFailure(error instanceof Error ? error.message : 'Login failed'));
+    const response: any = yield call(loginApi.login, action.payload);
+    console.log("login response", response);
+    localStorageService.setAuthToken(
+      response?.token?.token || response?.mfa_token
+    );
+    yield call(
+      history.push,
+      response?.data?.role === UserRole.BUYER
+        ? "/buyer"
+        : response?.data?.role === UserRole.SELLER
+        ? "/seller"
+        : "/deliver"
+    );
+    yield put(loginSuccess(response));
+
+  } catch (error: any) {
+    yield put(
+      loginFailure(error instanceof Error ? error.message : "Login failed")
+    );
+    toastService.showError(error?.message);
+  }
+}
+
+function* signupSaga(action: PayloadAction<User>) {
+  try {
+    // Simulate API call
+    const response: User = yield call(signUpApi.signUp, action.payload);
+    console.log("login response", response);
+    yield put(loginSuccess(response));
+  } catch (error: any) {
+    yield put(
+      loginFailure(error instanceof Error ? error.message : "Login failed")
+    );
+    console.log("error", error.response.data.message);
+    throw new Error(error.response.data.message);
   }
 }
 
 export function* authSaga() {
   yield takeLatest(loginRequest.type, loginSaga);
+  yield takeLatest(signupRequest.type, signupSaga);
 }

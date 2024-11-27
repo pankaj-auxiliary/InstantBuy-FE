@@ -1,7 +1,11 @@
-import React, { useState } from 'react';
-import { useNavigate, useLocation, Link } from 'react-router-dom';
-import { Mail, Lock, ArrowRight } from 'lucide-react';
-import { useAuth } from '../../context/AuthContext';
+import React, { useState } from "react";
+import { useNavigate, useLocation, Link } from "react-router-dom";
+import { Mail, Lock, ArrowRight } from "lucide-react";
+import { useAuth } from "../../context/AuthContext";
+import { useDispatch } from "react-redux";
+import { loginRequest } from "../../features/auth/slice";
+import { Field, Form, Formik } from "formik";
+import * as Yup from "yup";
 
 export default function Login() {
   const navigate = useNavigate();
@@ -10,25 +14,17 @@ export default function Login() {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  const from = location.state?.from?.pathname || '/';
+  const dispatch = useDispatch();
 
-  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    setError(null);
-    setIsLoading(true);
+  const loginSchema = Yup.object().shape({
+    email: Yup.string().email("Invalid email").required("Email is required"),
+    password: Yup.string()
+      .required("Password is required")
+      .min(6, "Password should be atleast 6 alphabet"),
+  });
 
-    const formData = new FormData(e.currentTarget);
-    const email = formData.get('email') as string;
-    const password = formData.get('password') as string;
-
-    try {
-      await login(email, password);
-      navigate(from, { replace: true });
-    } catch (err) {
-      setError('Invalid email or password');
-    } finally {
-      setIsLoading(false);
-    }
+  const handleSubmit = (values: { email: string; password: string }) => {
+    dispatch(loginRequest(values));
   };
 
   return (
@@ -51,76 +47,104 @@ export default function Login() {
             </div>
           )}
 
-          <form onSubmit={handleSubmit} className="space-y-6">
-            <div>
-              <label htmlFor="email" className="block text-sm font-medium text-gray-700">
-                Email Address
-              </label>
-              <div className="mt-1 relative">
-                <input
-                  id="email"
-                  name="email"
-                  type="email"
-                  required
-                  className="appearance-none block w-full px-3 py-2 pl-10 border border-gray-300 rounded-lg shadow-sm placeholder-gray-400 focus:outline-none focus:ring-green-500 focus:border-green-500"
-                />
-                <Mail className="absolute left-3 top-2.5 text-gray-400" size={20} />
-              </div>
-            </div>
+          <Formik
+            initialValues={{
+              email: "",
+              password: "",
+            }}
+            validationSchema={loginSchema}
+            onSubmit={handleSubmit}
+            className="space-y-6"
+          >
+            {({ getFieldProps }) => (
+              <Form>
+                <div>
+                  <label
+                    htmlFor="email"
+                    className="block text-sm font-medium text-gray-700"
+                  >
+                    Email Address
+                  </label>
+                  <div className="mt-1 relative">
+                    <Field
+                      {...getFieldProps("email")}
+                      id="email"
+                      required
+                      className="appearance-none block w-full px-3 py-2 pl-10 border border-gray-300 rounded-lg shadow-sm placeholder-gray-400 focus:outline-none focus:ring-green-500 focus:border-green-500"
+                    />
+                    <Mail
+                      className="absolute left-3 top-2.5 text-gray-400"
+                      size={20}
+                    />
+                  </div>
+                </div>
 
-            <div>
-              <label htmlFor="password" className="block text-sm font-medium text-gray-700">
-                Password
-              </label>
-              <div className="mt-1 relative">
-                <input
-                  id="password"
-                  name="password"
-                  type="password"
-                  required
-                  className="appearance-none block w-full px-3 py-2 pl-10 border border-gray-300 rounded-lg shadow-sm placeholder-gray-400 focus:outline-none focus:ring-green-500 focus:border-green-500"
-                />
-                <Lock className="absolute left-3 top-2.5 text-gray-400" size={20} />
-              </div>
-            </div>
+                <div>
+                  <label
+                    htmlFor="password"
+                    className="block text-sm font-medium text-gray-700"
+                  >
+                    Password
+                  </label>
+                  <div className="mt-1 relative">
+                    <Field
+                      id="password"
+                      {...getFieldProps("password")}
+                      required
+                      className="appearance-none block w-full px-3 py-2 pl-10 border border-gray-300 rounded-lg shadow-sm placeholder-gray-400 focus:outline-none focus:ring-green-500 focus:border-green-500"
+                    />
+                    <Lock
+                      className="absolute left-3 top-2.5 text-gray-400"
+                      size={20}
+                    />
+                  </div>
+                </div>
 
-            <div className="flex items-center justify-between">
-              <div className="flex items-center">
-                <input
-                  id="remember-me"
-                  name="remember-me"
-                  type="checkbox"
-                  className="h-4 w-4 text-green-600 focus:ring-green-500 border-gray-300 rounded"
-                />
-                <label htmlFor="remember-me" className="ml-2 block text-sm text-gray-900">
-                  Remember me
-                </label>
-              </div>
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center">
+                    <input
+                      id="remember-me"
+                      name="remember-me"
+                      type="checkbox"
+                      className="h-4 w-4 text-green-600 focus:ring-green-500 border-gray-300 rounded"
+                    />
+                    <label
+                      htmlFor="remember-me"
+                      className="ml-2 block text-sm text-gray-900"
+                    >
+                      Remember me
+                    </label>
+                  </div>
 
-              <div className="text-sm">
-                <a href="#" className="font-medium text-green-600 hover:text-green-500">
-                  Forgot your password?
-                </a>
-              </div>
-            </div>
+                  <div className="text-sm">
+                    <a
+                      href="#"
+                      className="font-medium text-green-600 hover:text-green-500"
+                    >
+                      Forgot your password?
+                    </a>
+                  </div>
+                </div>
 
-            <div>
-              <button
-                type="submit"
-                disabled={isLoading}
-                className="w-full flex justify-center items-center py-2 px-4 border border-transparent rounded-lg shadow-sm text-sm font-medium text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 disabled:opacity-50 disabled:cursor-not-allowed"
-              >
-                {isLoading ? (
-                  <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white"></div>
-                ) : (
-                  <>
-                    <span>Sign in</span>
-                    <ArrowRight className="ml-2" size={20} />
-                  </>
-                )}
-              </button>
-            </div>
-          </form>
+                <div>
+                  <button
+                    type="submit"
+                    disabled={isLoading}
+                    className="w-full flex justify-center items-center py-2 px-4 border border-transparent rounded-lg shadow-sm text-sm font-medium text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 disabled:opacity-50 disabled:cursor-not-allowed"
+                  >
+                    {isLoading ? (
+                      <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white"></div>
+                    ) : (
+                      <>
+                        <span>Sign in</span>
+                        <ArrowRight className="ml-2" size={20} />
+                      </>
+                    )}
+                  </button>
+                </div>
+              </Form>
+            )}
+          </Formik>
 
           <div className="mt-6">
             <div className="relative">
@@ -128,7 +152,9 @@ export default function Login() {
                 <div className="w-full border-t border-gray-300" />
               </div>
               <div className="relative flex justify-center text-sm">
-                <span className="px-2 bg-white text-gray-500">Don't have an account?</span>
+                <span className="px-2 bg-white text-gray-500">
+                  Don't have an account?
+                </span>
               </div>
             </div>
 

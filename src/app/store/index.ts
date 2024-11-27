@@ -8,6 +8,8 @@ import authReducer from "../../features/auth/slice";
 import usersReducer from "../../features/user/slice";
 import { errorMiddleware } from "../middleware/errorMiddleware";
 import { usersSaga } from "../../features/user/saga";
+import { createBrowserHistory } from "history";
+import favoritesReducer from "../../features/favourites/slice";
 
 // Create saga middleware
 const sagaMiddleware = createSagaMiddleware();
@@ -17,12 +19,15 @@ function* rootSaga() {
   yield all([productsSaga(), authSaga(), usersSaga()]);
 }
 
+export const history = createBrowserHistory();
+
 // Configure store with reducers and middleware
 export const store = configureStore({
   reducer: {
     products: productsReducer,
     auth: authReducer,
     users: usersReducer,
+    favorites: favoritesReducer,
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({
