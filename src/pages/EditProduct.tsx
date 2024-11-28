@@ -1,19 +1,19 @@
-import React, { useState, useEffect } from 'react';
-import { useNavigate, useParams } from 'react-router-dom';
-import SellerNavbar from '../components/SellerNavbar';
-import SellerSidebar from '../components/SellerSidebar';
-import ProductForm from '../components/ProductForm';
+import { useState, useEffect } from "react";
+import { useNavigate, useParams } from "react-router-dom";
+import SellerNavbar from "../components/seller/SellerNavbar";
+import SellerSidebar from "../components/seller/SellerSidebar";
+import ProductForm from "../components/ProductForm";
 
 export default function EditProduct() {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
-  const [product, setProduct] = useState(null);
+  const [product, setProduct] = useState({});
   const navigate = useNavigate();
   const { id } = useParams();
 
   useEffect(() => {
     // Simulate API call to fetch product
     const fetchProduct = async () => {
-      await new Promise(resolve => setTimeout(resolve, 500));
+      await new Promise((resolve) => setTimeout(resolve, 500));
       setProduct({
         name: "Fresh Organic Bananas",
         price: 2.99,
@@ -22,8 +22,9 @@ export default function EditProduct() {
         status: "active",
         description: "Fresh and organic bananas sourced directly from farmers.",
         weight: "1 bunch (5-7 pieces)",
-        image: "https://images.unsplash.com/photo-1603833665858-e61d17a86224?auto=format&fit=crop&q=80&w=800",
-        discount: 10
+        image:
+          "https://images.unsplash.com/photo-1603833665858-e61d17a86224?auto=format&fit=crop&q=80&w=800",
+        discount: 10,
       });
     };
     fetchProduct();
@@ -31,8 +32,8 @@ export default function EditProduct() {
 
   const handleSubmit = async (formData: FormData) => {
     // Simulate API call
-    await new Promise(resolve => setTimeout(resolve, 1000));
-    navigate('/seller/products');
+    await new Promise((resolve) => setTimeout(resolve, 1000));
+    navigate("/seller/products");
   };
 
   if (!product) {
@@ -46,7 +47,7 @@ export default function EditProduct() {
   return (
     <div className="min-h-screen bg-gray-50">
       <SellerNavbar onMenuClick={() => setIsSidebarOpen(true)} />
-      <SellerSidebar 
+      <SellerSidebar
         isOpen={isSidebarOpen}
         onClose={() => setIsSidebarOpen(false)}
       />
@@ -57,10 +58,7 @@ export default function EditProduct() {
           <p className="text-gray-600 mt-1">Update product information</p>
         </div>
 
-        <ProductForm 
-          onSubmit={handleSubmit}
-          initialData={product}
-        />
+        <ProductForm onSubmit={handleSubmit} initialData={product} />
       </main>
     </div>
   );

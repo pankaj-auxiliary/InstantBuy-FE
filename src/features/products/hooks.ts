@@ -1,12 +1,12 @@
-import { useCallback } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
-import { RootState } from '../../app/store';
-import { GetProductsParams, Product } from './types';
+import { useCallback } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { RootState } from "../../app/store";
+import { GetProductsParams, Product } from "./types";
 import {
   fetchProductsRequest,
   selectProduct,
   clearSelectedProduct,
-} from './slice';
+} from "./slice";
 
 export const useProducts = () => {
   const dispatch = useDispatch();
@@ -16,6 +16,7 @@ export const useProducts = () => {
 
   const fetchProducts = useCallback(
     (params: GetProductsParams) => {
+      console.log("fetching products dispatched");
       dispatch(fetchProductsRequest(params));
     },
     [dispatch]

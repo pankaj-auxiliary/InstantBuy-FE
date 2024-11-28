@@ -8,13 +8,9 @@ import { Field, Form, Formik } from "formik";
 import * as Yup from "yup";
 
 export default function Login() {
-  const navigate = useNavigate();
-  const location = useLocation();
   const { login } = useAuth();
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
-
-  const dispatch = useDispatch();
 
   const loginSchema = Yup.object().shape({
     email: Yup.string().email("Invalid email").required("Email is required"),
@@ -23,8 +19,8 @@ export default function Login() {
       .min(6, "Password should be atleast 6 alphabet"),
   });
 
-  const handleSubmit = (values: { email: string; password: string }) => {
-    dispatch(loginRequest(values));
+  const handleSubmit = (email: string, password: string) => {
+    login(email, password);
   };
 
   return (
@@ -53,7 +49,7 @@ export default function Login() {
               password: "",
             }}
             validationSchema={loginSchema}
-            onSubmit={handleSubmit}
+            onSubmit={(values) => handleSubmit(values.email, values.password)}
             className="space-y-6"
           >
             {({ getFieldProps }) => (

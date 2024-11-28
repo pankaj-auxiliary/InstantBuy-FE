@@ -1,10 +1,11 @@
-import React, { useEffect } from 'react';
-import { useProducts } from '../hooks';
+import React, { useEffect } from "react";
+import { useProducts } from "../hooks";
 
 export default function ProductList() {
   const { products, loading, error, fetchProducts } = useProducts();
 
   useEffect(() => {
+    console.log("fetching products");
     fetchProducts({ page: 1, limit: 10 });
   }, [fetchProducts]);
 
@@ -21,10 +22,10 @@ export default function ProductList() {
       {products.map((product) => (
         <div
           key={product.id}
-          className="bg-white p-4 rounded-lg shadow-sm border border-gray-100"
+          className="bg-white outline p-4 rounded-lg shadow-sm border border-gray-100"
         >
           <img
-            src={product.image}
+            src={product.coverImage}
             alt={product.name}
             className="w-full h-48 object-cover rounded-lg mb-4"
           />

@@ -1,43 +1,24 @@
 import { useState } from "react";
-import { Link } from "react-router-dom";
-import SellerNavbar from "../components/seller/SellerNavbar";
-import SellerSidebar from "../components/seller/SellerSidebar";
-import { Plus, Search, Filter, MoreVertical, Edit, Trash } from "lucide-react";
 
-interface Product {
-  id: number;
-  name: string;
-  price: number;
-  stock: number;
-  category: string;
-  status: "active" | "draft";
-  image: string;
-}
+import { Search, Filter, Mail, Phone } from "lucide-react";
+import SellerSidebar from "../../components/seller/SellerSidebar";
+import SellerNavbar from "../../components/seller/SellerNavbar";
 
-export default function SellerProducts() {
+const customers = [
+  {
+    id: 1,
+    name: "John Doe",
+    email: "john@example.com",
+    phone: "+1 (555) 123-4567",
+    orders: 12,
+    totalSpent: 345.67,
+    lastOrder: "2024-03-15",
+  },
+  // Add more customers as needed
+];
+
+export default function SellerCustomers() {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
-  const [products] = useState<Product[]>([
-    {
-      id: 1,
-      name: "Fresh Organic Bananas",
-      price: 2.99,
-      stock: 50,
-      category: "Fruits",
-      status: "active",
-      image:
-        "https://images.unsplash.com/photo-1603833665858-e61d17a86224?auto=format&fit=crop&q=80&w=800",
-    },
-    {
-      id: 2,
-      name: "Premium Whole Milk",
-      price: 3.49,
-      stock: 30,
-      category: "Dairy",
-      status: "active",
-      image:
-        "https://images.unsplash.com/photo-1563636619-e9143da7973b?auto=format&fit=crop&q=80&w=800",
-    },
-  ]);
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -48,15 +29,11 @@ export default function SellerProducts() {
       />
 
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        <div className="flex justify-between items-center mb-6">
-          <h1 className="text-2xl font-bold text-gray-800">Products</h1>
-          <Link
-            to="/seller/products/add"
-            className="bg-green-500 text-white px-4 py-2 rounded-lg font-medium hover:bg-green-600 transition-colors flex items-center"
-          >
-            <Plus size={20} className="mr-2" />
-            Add Product
-          </Link>
+        <div className="mb-8">
+          <h1 className="text-2xl font-bold text-gray-800">Customers</h1>
+          <p className="text-gray-600 mt-1">
+            Manage your customer relationships
+          </p>
         </div>
 
         <div className="bg-white rounded-lg shadow-sm border border-gray-100">
@@ -65,7 +42,7 @@ export default function SellerProducts() {
               <div className="relative flex-1">
                 <input
                   type="text"
-                  placeholder="Search products..."
+                  placeholder="Search customers..."
                   className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500"
                 />
                 <Search
@@ -85,19 +62,19 @@ export default function SellerProducts() {
               <thead>
                 <tr className="bg-gray-50">
                   <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                    Product
+                    Customer
                   </th>
                   <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                    Price
+                    Contact
                   </th>
                   <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                    Stock
+                    Orders
                   </th>
                   <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                    Category
+                    Total Spent
                   </th>
                   <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                    Status
+                    Last Order
                   </th>
                   <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                     Actions
@@ -105,66 +82,57 @@ export default function SellerProducts() {
                 </tr>
               </thead>
               <tbody className="bg-white divide-y divide-gray-200">
-                {products.map((product) => (
-                  <tr key={product.id}>
+                {customers.map((customer) => (
+                  <tr key={customer.id}>
                     <td className="px-6 py-4 whitespace-nowrap">
                       <div className="flex items-center">
-                        <img
-                          src={product.image}
-                          alt={product.name}
-                          className="w-10 h-10 rounded-lg object-cover"
-                        />
+                        <div className="h-10 w-10 rounded-full bg-gray-200 flex items-center justify-center">
+                          <span className="text-gray-600 font-medium">
+                            {customer.name
+                              .split(" ")
+                              .map((n) => n[0])
+                              .join("")}
+                          </span>
+                        </div>
                         <div className="ml-4">
                           <div className="text-sm font-medium text-gray-900">
-                            {product.name}
+                            {customer.name}
                           </div>
                           <div className="text-sm text-gray-500">
-                            ID: {product.id}
+                            Customer ID: {customer.id}
                           </div>
                         </div>
                       </div>
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap">
-                      <div className="text-sm text-gray-900">
-                        ${product.price.toFixed(2)}
+                      <div className="text-sm text-gray-900 flex items-center">
+                        <Mail size={16} className="mr-2 text-gray-400" />
+                        {customer.email}
+                      </div>
+                      <div className="text-sm text-gray-500 flex items-center">
+                        <Phone size={16} className="mr-2 text-gray-400" />
+                        {customer.phone}
                       </div>
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap">
-                      <div className="text-sm text-gray-900">
-                        {product.stock} units
-                      </div>
-                    </td>
-                    <td className="px-6 py-4 whitespace-nowrap">
-                      <div className="text-sm text-gray-900">
-                        {product.category}
-                      </div>
-                    </td>
-                    <td className="px-6 py-4 whitespace-nowrap">
-                      <span
-                        className={`px-2 py-1 text-xs font-medium rounded-full ${
-                          product.status === "active"
-                            ? "bg-green-100 text-green-600"
-                            : "bg-gray-100 text-gray-600"
-                        }`}
-                      >
-                        {product.status}
+                      <span className="text-sm text-gray-900">
+                        {customer.orders} orders
                       </span>
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap">
-                      <div className="flex items-center space-x-3">
-                        <Link
-                          to={`/seller/products/edit/${product.id}`}
-                          className="text-gray-600 hover:text-green-600"
-                        >
-                          <Edit size={18} />
-                        </Link>
-                        <button className="text-gray-600 hover:text-red-600">
-                          <Trash size={18} />
-                        </button>
-                        <button className="text-gray-600">
-                          <MoreVertical size={18} />
-                        </button>
-                      </div>
+                      <span className="text-sm font-medium text-gray-900">
+                        ${customer.totalSpent.toFixed(2)}
+                      </span>
+                    </td>
+                    <td className="px-6 py-4 whitespace-nowrap">
+                      <span className="text-sm text-gray-900">
+                        {customer.lastOrder}
+                      </span>
+                    </td>
+                    <td className="px-6 py-4 whitespace-nowrap">
+                      <button className="text-sm text-green-600 hover:text-green-700">
+                        View Details
+                      </button>
                     </td>
                   </tr>
                 ))}

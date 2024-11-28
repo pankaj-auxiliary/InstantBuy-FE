@@ -7,6 +7,8 @@ import {
   fetchProductsFailure,
 } from "./slice";
 import { GetProductsParams, ProductsResponse } from "./types";
+import { toastService } from "../../services/ToastServices";
+import { toast } from "react-toastify";
 
 function* fetchProducts(action: PayloadAction<GetProductsParams>) {
   try {
@@ -14,17 +16,17 @@ function* fetchProducts(action: PayloadAction<GetProductsParams>) {
       productsApi.getProducts,
       action.payload
     );
+    console.log("response.data", response);
     yield put(fetchProductsSuccess(response.data));
-  } catch (error) {
+  } catch (error: any) {
     yield put(
       fetchProductsFailure(
         error instanceof Error ? error.message : "Failed to fetch products"
       )
     );
+    toastService.showError(error?.message);
   }
 }
-
-
 
 export function* productsSaga() {
   yield takeLatest(fetchProductsRequest.type, fetchProducts);

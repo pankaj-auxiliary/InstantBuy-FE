@@ -1,5 +1,5 @@
-import { createSlice, PayloadAction } from '@reduxjs/toolkit';
-import { ProductsState, Product, GetProductsParams } from './types';
+import { createSlice, PayloadAction } from "@reduxjs/toolkit";
+import { ProductsState, Product, GetProductsParams } from "./types";
 
 const initialState: ProductsState = {
   items: [],
@@ -9,7 +9,7 @@ const initialState: ProductsState = {
 };
 
 const productsSlice = createSlice({
-  name: 'products',
+  name: "products",
   initialState,
   reducers: {
     // Fetch products
@@ -18,6 +18,7 @@ const productsSlice = createSlice({
       state.error = null;
     },
     fetchProductsSuccess: (state, action: PayloadAction<Product[]>) => {
+      console.log("action.payload", action.payload);
       state.items = action.payload;
       state.loading = false;
     },

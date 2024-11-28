@@ -1,15 +1,21 @@
-import { Plus } from 'lucide-react';
+import { Plus } from "lucide-react";
 
 interface ProductCardProps {
   name: string;
   price: number;
-  weight: string;
-  image: string;
+  coverImage: string;
   discount?: number;
   onAddToCart?: () => void;
 }
 
-export default function ProductCard({ name, price, weight, image, discount, onAddToCart }: ProductCardProps) {
+export default function ProductCard({
+  name,
+  price,
+  coverImage,
+  discount,
+  onAddToCart,
+}: ProductCardProps) {
+  console.log("coverImage", name, price, coverImage, discount);
   return (
     <div className="bg-white p-4 rounded-lg shadow-sm border border-gray-100 hover:shadow-md transition-shadow">
       <div className="relative">
@@ -19,14 +25,13 @@ export default function ProductCard({ name, price, weight, image, discount, onAd
           </span>
         )}
         <img
-          src={image}
+          src={coverImage}
           alt={name}
           className="w-full h-48 object-cover rounded-lg mb-4"
         />
       </div>
       <div className="space-y-2">
         <h3 className="font-medium text-gray-800 line-clamp-2">{name}</h3>
-        <p className="text-sm text-gray-500">{weight}</p>
         <div className="flex items-center justify-between">
           <div>
             <span className="text-lg font-bold">${price.toFixed(2)}</span>
@@ -36,7 +41,7 @@ export default function ProductCard({ name, price, weight, image, discount, onAd
               </span>
             )}
           </div>
-          <button 
+          <button
             onClick={onAddToCart}
             className="bg-green-500 text-white p-2 rounded-lg hover:bg-green-600 transition-colors"
           >

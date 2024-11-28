@@ -29,7 +29,7 @@ function* loginSaga(action: PayloadAction<Partial<User>>): any {
         : "/deliver"
     );
     yield put(loginSuccess(response));
-
+    toastService.showSuccess("Login successful");
   } catch (error: any) {
     yield put(
       loginFailure(error instanceof Error ? error.message : "Login failed")

@@ -1,46 +1,52 @@
-import React, { useState } from 'react';
-import SellerNavbar from '../components/SellerNavbar';
-import SellerSidebar from '../components/SellerSidebar';
-import { BarChart2, ShoppingBag, Package, TrendingUp, ArrowUpRight } from 'lucide-react';
+import React, { useState } from "react";
+import SellerNavbar from "../components/seller/SellerNavbar";
+import SellerSidebar from "../components/seller/SellerSidebar";
+import {
+  BarChart2,
+  ShoppingBag,
+  Package,
+  TrendingUp,
+  ArrowUpRight,
+} from "lucide-react";
 
 export default function SellerDashboard() {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
   const stats = [
-    { 
-      label: 'Total Sales',
-      value: '$12,345',
-      change: '+12.5%',
+    {
+      label: "Total Sales",
+      value: "$12,345",
+      change: "+12.5%",
       icon: BarChart2,
-      color: 'bg-blue-500'
+      color: "bg-blue-500",
     },
     {
-      label: 'Orders',
-      value: '156',
-      change: '+8.2%',
+      label: "Orders",
+      value: "156",
+      change: "+8.2%",
       icon: ShoppingBag,
-      color: 'bg-green-500'
+      color: "bg-green-500",
     },
     {
-      label: 'Products',
-      value: '45',
-      change: '+2',
+      label: "Products",
+      value: "45",
+      change: "+2",
       icon: Package,
-      color: 'bg-purple-500'
+      color: "bg-purple-500",
     },
     {
-      label: 'Conversion Rate',
-      value: '3.2%',
-      change: '+0.8%',
+      label: "Conversion Rate",
+      value: "3.2%",
+      change: "+0.8%",
       icon: TrendingUp,
-      color: 'bg-orange-500'
-    }
+      color: "bg-orange-500",
+    },
   ];
 
   return (
     <div className="min-h-screen bg-gray-50">
       <SellerNavbar onMenuClick={() => setIsSidebarOpen(true)} />
-      <SellerSidebar 
+      <SellerSidebar
         isOpen={isSidebarOpen}
         onClose={() => setIsSidebarOpen(false)}
       />
@@ -53,7 +59,10 @@ export default function SellerDashboard() {
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
           {stats.map((stat) => (
-            <div key={stat.label} className="bg-white p-6 rounded-lg shadow-sm border border-gray-100">
+            <div
+              key={stat.label}
+              className="bg-white p-6 rounded-lg shadow-sm border border-gray-100"
+            >
               <div className="flex items-center justify-between mb-4">
                 <div className={`p-2 rounded-lg ${stat.color}`}>
                   <stat.icon size={24} className="text-white" />

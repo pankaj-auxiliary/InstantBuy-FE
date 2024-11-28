@@ -1,5 +1,5 @@
-import { Link } from 'react-router-dom';
-import { Menu, Bell, User } from 'lucide-react';
+import { Link } from "react-router-dom";
+import { Menu, Bell, User } from "lucide-react";
 
 interface SellerNavbarProps {
   onMenuClick: () => void;
@@ -11,7 +11,7 @@ export default function SellerNavbar({ onMenuClick }: SellerNavbarProps) {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16">
           <div className="flex items-center space-x-6">
-            <button 
+            <button
               onClick={onMenuClick}
               className="p-2 hover:bg-gray-100 rounded-lg transition-colors"
             >
@@ -20,7 +20,9 @@ export default function SellerNavbar({ onMenuClick }: SellerNavbarProps) {
             <Link to="/seller" className="flex-shrink-0">
               <span className="text-2xl font-bold text-green-500">blink</span>
               <span className="text-2xl font-bold text-gray-700">it</span>
-              <span className="ml-2 text-sm font-medium text-gray-500">Seller</span>
+              <span className="ml-2 text-sm font-medium text-gray-500">
+                Seller
+              </span>
             </Link>
           </div>
 

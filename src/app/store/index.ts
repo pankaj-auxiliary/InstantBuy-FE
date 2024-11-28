@@ -10,13 +10,14 @@ import { errorMiddleware } from "../middleware/errorMiddleware";
 import { usersSaga } from "../../features/user/saga";
 import { createBrowserHistory } from "history";
 import favoritesReducer from "../../features/favourites/slice";
+import { favoritesSaga } from "../../features/favourites/sagas";
 
 // Create saga middleware
 const sagaMiddleware = createSagaMiddleware();
 
 // Root saga that combines all feature sagas
 function* rootSaga() {
-  yield all([productsSaga(), authSaga(), usersSaga()]);
+  yield all([productsSaga(), authSaga(), usersSaga(), favoritesSaga()]);
 }
 
 export const history = createBrowserHistory();

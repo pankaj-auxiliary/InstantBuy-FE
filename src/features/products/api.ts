@@ -1,3 +1,4 @@
+import axios from "axios";
 import { Product, ProductsResponse, GetProductsParams } from "./types";
 
 // Simulated API delay
@@ -10,19 +11,29 @@ const mockProducts = [
     name: "Fresh Organic Bananas",
     price: 2.99,
     description: "Fresh and organic bananas sourced directly from farmers",
-    image:
+    coverImage:
       "https://images.unsplash.com/photo-1603833665858-e61d17a86224?auto=format&fit=crop&q=80&w=800",
     category: "Fruits",
     stock: 50,
+    images: [
+      "https://images.unsplash.com/photo-1603833665858-e61d17a86224?auto=format&fit=crop&q=80&w=800",
+      "https://images.unsplash.com/photo-1603833665858-e61d17a86224?auto=format&fit=crop&q=80&w=800",
+      "https://images.unsplash.com/photo-1603833665858-e61d17a86224?auto=format&fit=crop&q=80&w=800",
+    ],
   },
   {
     id: 2,
     name: "Premium Whole Milk",
     price: 3.49,
     description: "Fresh whole milk from local dairy farms",
-    image:
+    coverImage:
       "https://images.unsplash.com/photo-1563636619-e9143da7973b?auto=format&fit=crop&q=80&w=800",
     category: "Dairy",
+    images: [
+      "https://images.unsplash.com/photo-1563636619-e9143da7973b?auto=format&fit=crop&q=80&w=800",
+      "https://images.unsplash.com/photo-1563636619-e9143da7973b?auto=format&fit=crop&q=80&w=800",
+      "https://images.unsplash.com/photo-1563636619-e9143da7973b?auto=format&fit=crop&q=80&w=800",
+    ],
     stock: 30,
   },
 ];
@@ -30,18 +41,19 @@ const mockProducts = [
 export const productsApi = {
   getProducts: async (params: GetProductsParams): Promise<ProductsResponse> => {
     // Simulate API call
-    await delay(1000);
+    const products: any = await axios.get("http://localhost:3333/products");
     return {
-      data: mockProducts,
-      total: mockProducts.length,
+      data: products.data.products,
+      total: products.data.length,
       page: params.page || 1,
       limit: params.limit || 10,
     };
   },
 
   getProduct: async (id: number): Promise<Product> => {
-    await delay(500);
-    const product = mockProducts.find((p) => p.id === id);
+    const product: Product = await axios.get(
+      `http://localhost:3333/products/${id}`
+    );
     if (!product) throw new Error("Product not found");
     return product;
   },

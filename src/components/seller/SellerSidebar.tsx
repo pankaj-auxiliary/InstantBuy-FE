@@ -1,5 +1,5 @@
-import { Link, useLocation } from 'react-router-dom';
-import { 
+import { Link, useLocation } from "react-router-dom";
+import {
   LayoutDashboard,
   Package,
   ShoppingBag,
@@ -7,8 +7,8 @@ import {
   BarChart2,
   Settings,
   HelpCircle,
-  ChevronRight
-} from 'lucide-react';
+  ChevronRight,
+} from "lucide-react";
 
 interface SellerSidebarProps {
   isOpen: boolean;
@@ -16,16 +16,16 @@ interface SellerSidebarProps {
 }
 
 const menuItems = [
-  { icon: LayoutDashboard, label: 'Dashboard', path: '/seller' },
-  { icon: Package, label: 'Products', path: '/seller/products', badge: '45' },
-  { icon: ShoppingBag, label: 'Orders', path: '/seller/orders', badge: '12' },
-  { icon: Users, label: 'Customers', path: '/seller/customers' },
-  { icon: BarChart2, label: 'Analytics', path: '/seller/analytics' },
+  { icon: LayoutDashboard, label: "Dashboard", path: "/seller" },
+  { icon: Package, label: "Products", path: "/seller/products", badge: "45" },
+  { icon: ShoppingBag, label: "Orders", path: "/seller/orders", badge: "12" },
+  { icon: Users, label: "Customers", path: "/seller/customers" },
+  { icon: BarChart2, label: "Analytics", path: "/seller/analytics" },
 ];
 
 const bottomMenuItems = [
-  { icon: Settings, label: 'Settings', path: '/seller/settings' },
-  { icon: HelpCircle, label: 'Help & Support', path: '/seller/support' },
+  { icon: Settings, label: "Settings", path: "/seller/settings" },
+  { icon: HelpCircle, label: "Help & Support", path: "/seller/support" },
 ];
 
 export default function SellerSidebar({ isOpen, onClose }: SellerSidebarProps) {
@@ -34,16 +34,18 @@ export default function SellerSidebar({ isOpen, onClose }: SellerSidebarProps) {
   return (
     <>
       {isOpen && (
-        <div 
+        <div
           className="fixed inset-0 bg-black bg-opacity-50 transition-opacity z-40"
           onClick={onClose}
         />
       )}
 
-      <div className={`
+      <div
+        className={`
         fixed top-0 left-0 h-full w-80 bg-white shadow-2xl transform transition-transform duration-300 ease-in-out z-50
-        ${isOpen ? 'translate-x-0' : '-translate-x-full'}
-      `}>
+        ${isOpen ? "translate-x-0" : "-translate-x-full"}
+      `}
+      >
         <div className="h-full flex flex-col">
           <div className="p-6 bg-gradient-to-r from-green-500 to-green-600 text-white">
             <div className="flex items-center space-x-4">
@@ -65,11 +67,22 @@ export default function SellerSidebar({ isOpen, onClose }: SellerSidebarProps) {
                   to={item.path}
                   className={`
                     w-full px-6 py-3 flex items-center justify-between hover:bg-gray-50 transition-colors
-                    ${location.pathname === item.path ? 'bg-green-50 text-green-600' : ''}
+                    ${
+                      location.pathname === item.path
+                        ? "bg-green-50 text-green-600"
+                        : ""
+                    }
                   `}
                 >
                   <div className="flex items-center space-x-3">
-                    <item.icon size={20} className={location.pathname === item.path ? 'text-green-600' : 'text-gray-600'} />
+                    <item.icon
+                      size={20}
+                      className={
+                        location.pathname === item.path
+                          ? "text-green-600"
+                          : "text-gray-600"
+                      }
+                    />
                     <span className="font-medium">{item.label}</span>
                   </div>
                   <div className="flex items-center space-x-2">

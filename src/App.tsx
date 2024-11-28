@@ -6,6 +6,11 @@ import ProtectedRoute from "./components/auth/ProtectedRoute";
 import BuyerInterface from "./pages/buyer/BuyerInterface";
 import BuyerProfile from "./pages/buyer/BuyerProfile";
 import Orders from "./pages/buyer/Orders";
+import Wallet from "./pages/buyer/Wallet";
+import Offers from "./pages/buyer/Offers";
+import DeliveryAddress from "./pages/buyer/DeliveryAddress";
+import Settings from "./pages/buyer/Settings";
+import Support from "./pages/buyer/Support";
 
 // Seller Pages
 import SellerDashboard from "./pages/SellerDashboard";
@@ -22,13 +27,14 @@ import NotFound from "./pages/NotFound";
 import { localStorageService } from "./services/LocalStorageService";
 import { useSelector } from "react-redux";
 import { RootState } from "./app/store";
-import { UserRole } from "./features/user/types";
 import Favorites from "./pages/buyer/Favourites";
-import Settings from "./pages/buyer/Settings";
-import Support from "./pages/buyer/Support";
-import DeliveryAddress from "./pages/buyer/DeliveryAddress";
-import Offers from "./pages/buyer/Offers";
-import Wallet from "./pages/buyer/Wallet";
+import SellerOrders from "./pages/seller/SellerOrders";
+import SellerAnalytics from "./pages/seller/SellerAnalytics";
+import SellerCustomers from "./pages/seller/SellerCustomer";
+import SellerSupport from "./pages/seller/SellerSupport";
+import SellerSettings from "./pages/seller/SellerSettings";
+import { UserRole } from "./features/user/types";
+import { ToastContainer } from "react-toastify";
 
 function App() {
   const authToken = localStorageService.getAuthToken();
@@ -36,6 +42,7 @@ function App() {
 
   return (
     <AuthProvider>
+    
       <Routes>
         {/* Public Routes */}
         <Route path="/login" element={<Login />} />
@@ -160,6 +167,46 @@ function App() {
           element={
             <ProtectedRoute allowedRoles={[UserRole.SELLER]}>
               <EditProduct />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/seller/orders"
+          element={
+            <ProtectedRoute allowedRoles={[UserRole.SELLER]}>
+              <SellerOrders />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/seller/analytics"
+          element={
+            <ProtectedRoute allowedRoles={[UserRole.SELLER]}>
+              <SellerAnalytics />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/seller/customers"
+          element={
+            <ProtectedRoute allowedRoles={[UserRole.SELLER]}>
+              <SellerCustomers />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/seller/settings"
+          element={
+            <ProtectedRoute allowedRoles={[UserRole.SELLER]}>
+              <SellerSettings />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/seller/support"
+          element={
+            <ProtectedRoute allowedRoles={[UserRole.SELLER]}>
+              <SellerSupport />
             </ProtectedRoute>
           }
         />
