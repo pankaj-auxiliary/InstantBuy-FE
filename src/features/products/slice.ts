@@ -17,8 +17,36 @@ const productsSlice = createSlice({
       state.loading = true;
       state.error = null;
     },
+    fetchProductsByCategoryRequest: (state, action: PayloadAction<string>) => {
+      state.loading = true;
+      state.error = null;
+    },
+    fetchProductsByCategorySuccess: (
+      state,
+      action: PayloadAction<Product[]>
+    ) => {
+      state.items = action.payload;
+      state.loading = false;
+    },
+    fetchProductsByCategoryFailure: (state, action: PayloadAction<string>) => {
+      state.loading = false;
+      state.error = action.payload;
+    },
+
+    fetchProductByIdRequest: (state, action: PayloadAction<number>) => {
+      state.loading = true;
+      state.error = null;
+    },
+    fetchProductByIdSuccess: (state, action: PayloadAction<Product>) => {
+      state.selectedProduct = action.payload;
+      state.loading = false;
+    },
+    fetchProductByIdFailure: (state, action: PayloadAction<string>) => {
+      state.loading = false;
+      state.error = action.payload;
+    },
+
     fetchProductsSuccess: (state, action: PayloadAction<Product[]>) => {
-      console.log("action.payload", action.payload);
       state.items = action.payload;
       state.loading = false;
     },
@@ -44,6 +72,12 @@ export const {
   fetchProductsRequest,
   fetchProductsSuccess,
   fetchProductsFailure,
+  fetchProductsByCategoryFailure,
+  fetchProductsByCategoryRequest,
+  fetchProductsByCategorySuccess,
+  fetchProductByIdRequest,
+  fetchProductByIdSuccess,
+  fetchProductByIdFailure,
   selectProduct,
   clearSelectedProduct,
   resetProducts,

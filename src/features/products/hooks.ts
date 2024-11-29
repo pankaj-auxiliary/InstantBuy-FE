@@ -16,7 +16,6 @@ export const useProducts = () => {
 
   const fetchProducts = useCallback(
     (params: GetProductsParams) => {
-      console.log("fetching products dispatched");
       dispatch(fetchProductsRequest(params));
     },
     [dispatch]

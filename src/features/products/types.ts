@@ -8,6 +8,9 @@ export interface Product {
   images: string[];
   category: string;
   stock: number;
+  discount?: number;
+  rating?: number;
+  reviews?: number;
 }
 
 export interface ProductsState {

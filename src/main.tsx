@@ -6,22 +6,26 @@ import { store } from "./app/store";
 import App from "./App";
 import "./index.css";
 import { ToastContainer } from "react-toastify";
+import { AuthProvider } from "./context/AuthContext";
+import "react-toastify/dist/ReactToastify.css";
 
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
     <Provider store={store}>
       <BrowserRouter>
-        <ToastContainer
-          position="top-right"
-          autoClose={5000}
-          hideProgressBar={false}
-          newestOnTop={false}
-          closeOnClick
-          draggable
-          pauseOnHover
-          theme="light"
-        />
-        <App />
+        <AuthProvider>
+          <ToastContainer
+            position="top-center"
+            autoClose={2000}
+            hideProgressBar={false}
+            newestOnTop={false}
+            closeOnClick
+            draggable
+            pauseOnHover
+            theme="light"
+          />
+          <App />
+        </AuthProvider>
       </BrowserRouter>
     </Provider>
   </StrictMode>

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { useAuth } from "../../context/AuthContext";
 import Navbar from "../../components/Navbar";
 import CategoryBar from "../../components/CategoryBar";
@@ -7,10 +7,10 @@ import Sidebar from "../../components/Sidebar";
 import CartSidebar from "../../components/CartSidebar";
 import CheckoutPage from "../../components/CheckoutPage";
 import { useNavigate } from "react-router-dom";
-import { localStorageService } from "../../services/LocalStorageService";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../../app/store";
 import { fetchProductsRequest } from "../../features/products/slice";
+import UserProfileSidebar from "../UserProfileSidebar";
 
 interface CartItem {
   id: number;
@@ -21,14 +21,19 @@ interface CartItem {
 }
 
 export default function BuyerInterface() {
-  const { isAuthenticated } = useAuth();
+  console.log("BuyerInterface rendered");
 
+  const { isAuthenticated } = useAuth();
   const navigate = useNavigate();
+
+  if (!isAuthenticated) {
+    navigate("/login");
+  }
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [isCartOpen, setIsCartOpen] = useState(false);
   const [isCheckoutOpen, setIsCheckoutOpen] = useState(false);
   const [cartItems, setCartItems] = useState<CartItem[]>([]);
-
+  const [profileOpen, setProfileOpen] = useState(false);
   const updateCartItemQuantity = (id: number, quantity: number) => {
     setCartItems((prevItems) => {
       if (quantity === 0) {
@@ -47,6 +52,8 @@ export default function BuyerInterface() {
     }
   }, [isAuthenticated]);
 
+  
+
   const handleCheckout = () => {
     if (!isAuthenticated) {
       navigate("/login");
@@ -61,6 +68,7 @@ export default function BuyerInterface() {
   };
 
   const products = useSelector((state: RootState) => state.products.items);
+
   return (
     <div className="min-h-screen bg-gray-50">
       <Navbar
@@ -68,6 +76,9 @@ export default function BuyerInterface() {
         onCartClick={() => setIsCartOpen(true)}
         onLoginClick={handleLoginClick}
         isLoggedIn={isAuthenticated}
+        onProfileClick={() => {
+          setProfileOpen(true);
+        }}
       />
       <Sidebar
         isOpen={isSidebarOpen}
@@ -86,6 +97,10 @@ export default function BuyerInterface() {
         isOpen={isCheckoutOpen}
         onClose={() => setIsCheckoutOpen(false)}
         cartItems={cartItems}
+      />
+      <UserProfileSidebar
+        isOpen={profileOpen}
+        onClose={() => setProfileOpen(false)}
       />
       <CategoryBar />
 

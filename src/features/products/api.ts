@@ -58,6 +58,14 @@ export const productsApi = {
     return product;
   },
 
+  getProductsByCategory: async (category: string): Promise<Product[]> => {
+    const products: Product[] = await axios.get(
+      `http://localhost:3333/products/category/${category}`
+    );
+    if (!products) throw new Error("Products not found");
+    return products;
+  },
+
   createProduct: async (product: Omit<Product, "id">): Promise<Product> => {
     await delay(1000);
     return { ...product, id: Math.random() };

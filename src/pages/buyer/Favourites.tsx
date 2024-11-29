@@ -1,16 +1,54 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../../app/store";
 import Navbar from "../../components/Navbar";
 import ProductCard from "../../components/ProductCard";
 import { Heart } from "lucide-react";
 import { fetchFavoritesRequest } from "../../features/favourites/slice";
+import CartSidebar, { CartItem } from "../../components/CartSidebar";
+import { useAuth } from "../../context/AuthContext";
+import { useNavigate } from "react-router-dom";
+import Sidebar from "../../components/Sidebar";
+import CheckoutPage from "../../components/CheckoutPage";
+import UserProfileSidebar from "../UserProfileSidebar";
 
 export default function Favorites() {
   const dispatch = useDispatch();
   const { items: favorites, loading } = useSelector(
     (state: RootState) => state.favorites
   );
+
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+  const [isCartOpen, setIsCartOpen] = useState(false);
+  const [isCheckoutOpen, setIsCheckoutOpen] = useState(false);
+  const [cartItems, setCartItems] = useState<CartItem[]>([]);
+  const [profileOpen, setProfileOpen] = useState(false);
+  const { isAuthenticated } = useAuth();
+  const navigate = useNavigate();
+
+  const updateCartItemQuantity = (id: number, quantity: number) => {
+    setCartItems((prevItems) => {
+      if (quantity === 0) {
+        return prevItems.filter((item) => item.id !== id);
+      }
+      return prevItems.map((item) =>
+        item.id === id ? { ...item, quantity } : item
+      );
+    });
+  };
+
+  const handleLoginClick = () => {
+    navigate("/login");
+  };
+
+  const handleCheckout = () => {
+    if (!isAuthenticated) {
+      navigate("/login");
+    } else {
+      setIsCartOpen(false);
+      setIsCheckoutOpen(true);
+    }
+  };
 
   useEffect(() => {
     dispatch(fetchFavoritesRequest());
@@ -19,10 +57,35 @@ export default function Favorites() {
   return (
     <div className="min-h-screen bg-gray-50">
       <Navbar
-        onMenuClick={() => {}}
-        onCartClick={() => {}}
-        onLoginClick={() => {}}
-        isLoggedIn={true}
+        onMenuClick={() => setIsSidebarOpen(true)}
+        onCartClick={() => setIsCartOpen(true)}
+        onLoginClick={handleLoginClick}
+        isLoggedIn={isAuthenticated}
+        onProfileClick={() => {
+          setProfileOpen(true);
+        }}
+      />
+      <Sidebar
+        isOpen={isSidebarOpen}
+        onClose={() => setIsSidebarOpen(false)}
+        onLoginClick={handleLoginClick}
+        isLoggedIn={isAuthenticated}
+      />
+      <CartSidebar
+        isOpen={isCartOpen}
+        onClose={() => setIsCartOpen(false)}
+        items={cartItems}
+        onUpdateQuantity={updateCartItemQuantity}
+        onCheckout={handleCheckout}
+      />
+      <CheckoutPage
+        isOpen={isCheckoutOpen}
+        onClose={() => setIsCheckoutOpen(false)}
+        cartItems={cartItems}
+      />
+      <UserProfileSidebar
+        isOpen={profileOpen}
+        onClose={() => setProfileOpen(false)}
       />
 
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
@@ -54,11 +117,10 @@ export default function Favorites() {
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
             {favorites.map((product) => (
               <ProductCard
-                key={product.id}
+                id={product.id}
                 name={product.name}
                 price={product.price}
-                image={product.image}
-                weight={product.name || ""}
+                coverImage={product.coverImage}
               />
             ))}
           </div>

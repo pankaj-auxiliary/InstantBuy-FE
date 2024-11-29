@@ -1,10 +1,9 @@
-import React, { useState } from "react";
-import { useNavigate, useLocation, Link } from "react-router-dom";
+import { useState } from "react";
+import { Link } from "react-router-dom";
 import { Mail, Lock, ArrowRight } from "lucide-react";
 import { useAuth } from "../../context/AuthContext";
-import { useDispatch } from "react-redux";
-import { loginRequest } from "../../features/auth/slice";
-import { Field, Form, Formik } from "formik";
+
+import { ErrorMessage, Field, Form, Formik } from "formik";
 import * as Yup from "yup";
 
 export default function Login() {
@@ -72,6 +71,11 @@ export default function Login() {
                       className="absolute left-3 top-2.5 text-gray-400"
                       size={20}
                     />
+                    <ErrorMessage name="email">
+                      {(msg) => (
+                        <div className=" text-sm text-red-500">{msg}</div>
+                      )}
+                    </ErrorMessage>
                   </div>
                 </div>
 
@@ -94,6 +98,11 @@ export default function Login() {
                       size={20}
                     />
                   </div>
+                  <ErrorMessage name="password">
+                    {(msg) => (
+                      <div className=" text-sm text-red-500">{msg}</div>
+                    )}
+                  </ErrorMessage>
                 </div>
 
                 <div className="flex items-center justify-between">

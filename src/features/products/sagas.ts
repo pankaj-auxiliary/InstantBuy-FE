@@ -5,9 +5,14 @@ import {
   fetchProductsRequest,
   fetchProductsSuccess,
   fetchProductsFailure,
+  fetchProductsByCategoryRequest,
+  fetchProductsByCategorySuccess,
+  fetchProductsByCategoryFailure,
+  fetchProductByIdSuccess,
+  fetchProductByIdFailure,
+  fetchProductByIdRequest,
 } from "./slice";
-import { GetProductsParams, ProductsResponse } from "./types";
-import { toastService } from "../../services/ToastServices";
+import { GetProductsParams, Product, ProductsResponse } from "./types";
 import { toast } from "react-toastify";
 
 function* fetchProducts(action: PayloadAction<GetProductsParams>) {
@@ -16,7 +21,6 @@ function* fetchProducts(action: PayloadAction<GetProductsParams>) {
       productsApi.getProducts,
       action.payload
     );
-    console.log("response.data", response);
     yield put(fetchProductsSuccess(response.data));
   } catch (error: any) {
     yield put(
@@ -24,10 +28,49 @@ function* fetchProducts(action: PayloadAction<GetProductsParams>) {
         error instanceof Error ? error.message : "Failed to fetch products"
       )
     );
-    toastService.showError(error?.message);
+    toast.error(error?.message);
+  }
+}
+
+function* fetchProductsByCategory(action: PayloadAction<string>) {
+  try {
+    const response: { data: ProductsResponse } = yield call(
+      productsApi.getProductsByCategory,
+      action.payload
+    );
+    yield put(fetchProductsByCategorySuccess(response.data.data));
+  } catch (error: any) {
+    yield put(
+      fetchProductsByCategoryFailure(
+        error instanceof Error ? error.message : "Failed to fetch products"
+      )
+    );
+    toast.error(error?.message);
+  }
+}
+
+function* fetchProductById(action: PayloadAction<number>) {
+  try {
+    const product: { data: any } = yield call(
+      productsApi.getProduct,
+      action.payload
+    );
+
+    yield put(fetchProductByIdSuccess(product.data.data));
+  } catch (error) {
+    yield put(
+      fetchProductByIdFailure(
+        error instanceof Error ? error.message : "Failed to fetch product"
+      )
+    );
   }
 }
 
 export function* productsSaga() {
   yield takeLatest(fetchProductsRequest.type, fetchProducts);
+  yield takeLatest(
+    fetchProductsByCategoryRequest.type,
+    fetchProductsByCategory
+  );
+  yield takeLatest(fetchProductByIdRequest.type, fetchProductById);
 }

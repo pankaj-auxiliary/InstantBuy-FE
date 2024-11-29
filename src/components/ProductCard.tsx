@@ -1,6 +1,8 @@
-import { Plus } from "lucide-react";
+import { Link, Plus } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 
 interface ProductCardProps {
+  id: number;
   name: string;
   price: number;
   coverImage: string;
@@ -9,16 +11,19 @@ interface ProductCardProps {
 }
 
 export default function ProductCard({
+  id,
   name,
   price,
   coverImage,
   discount,
   onAddToCart,
 }: ProductCardProps) {
-  console.log("coverImage", name, price, coverImage, discount);
+  const navigate = useNavigate();
+
   return (
     <div className="bg-white p-4 rounded-lg shadow-sm border border-gray-100 hover:shadow-md transition-shadow">
-      <div className="relative">
+      {/* <Link to={`/product/${id}/details`} className="block"> */}
+      <div className="relative cursor-pointer">
         {discount && (
           <span className="absolute top-2 left-2 bg-green-500 text-white px-2 py-1 rounded-full text-xs font-medium">
             {discount}% OFF
@@ -27,6 +32,7 @@ export default function ProductCard({
         <img
           src={coverImage}
           alt={name}
+          onClick={() => navigate(`/product/${id}/details`)}
           className="w-full h-48 object-cover rounded-lg mb-4"
         />
       </div>
@@ -49,6 +55,7 @@ export default function ProductCard({
           </button>
         </div>
       </div>
+      {/* </Link> */}
     </div>
   );
 }

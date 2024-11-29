@@ -6,18 +6,19 @@ import {
   fetchUsersSuccess,
 } from "./slice";
 import { UsersResponse } from "./types";
+import { toast } from "react-toastify";
 
 function* fetchUsers() {
   try {
     const response: UsersResponse = yield call(userApi.getUsers);
-    console.log("response", response);
     yield put(fetchUsersSuccess(response.data));
-  } catch (error) {
+  } catch (error: any) {
     yield put(
       fetchUsersFailure(
         error instanceof Error ? error.message : "Failed to fetch products"
       )
     );
+    toast.error(error?.message);
   }
 }
 

@@ -1,11 +1,10 @@
-import React, { useEffect } from "react";
+import { useEffect } from "react";
 import { useProducts } from "../hooks";
 
 export default function ProductList() {
   const { products, loading, error, fetchProducts } = useProducts();
 
   useEffect(() => {
-    console.log("fetching products");
     fetchProducts({ page: 1, limit: 10 });
   }, [fetchProducts]);
 

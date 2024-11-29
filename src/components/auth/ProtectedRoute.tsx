@@ -12,7 +12,8 @@ export default function ProtectedRoute({
   allowedRoles,
 }: ProtectedRouteProps) {
   const { isAuthenticated, user, loading } = useAuth();
-  const location = useLocation();
+  const location = useLocation(); // Ensure location is defined
+  console.log("ProtectedRoute Rendered", { user, isAuthenticated, loading });
 
   if (loading) {
     return (
@@ -23,14 +24,16 @@ export default function ProtectedRoute({
   }
 
   if (!isAuthenticated) {
+    console.log("Redirecting to login");
     return <Navigate to="/login" state={{ from: location }} replace />;
   }
 
   if (allowedRoles && user && !allowedRoles.includes(user.role)) {
-    // Redirect to appropriate homepage based on user role
+    console.log("Redirecting based on user role", user.role);
     const redirectPath = user.role === "seller" ? "/seller" : "/";
     return <Navigate to={redirectPath} replace />;
   }
 
+  console.log("Rendering children");
   return <>{children}</>;
 }

@@ -11,12 +11,12 @@ import { PayloadAction } from "@reduxjs/toolkit";
 import { toastService } from "../../services/ToastServices";
 import { localStorageService } from "../../services/LocalStorageService";
 import { history } from "../../app/store";
+import { toast } from "react-toastify";
 
 function* loginSaga(action: PayloadAction<Partial<User>>): any {
   try {
     // Simulate API call
     const response: any = yield call(loginApi.login, action.payload);
-    console.log("login response", response);
     localStorageService.setAuthToken(
       response?.token?.token || response?.mfa_token
     );
@@ -29,12 +29,12 @@ function* loginSaga(action: PayloadAction<Partial<User>>): any {
         : "/deliver"
     );
     yield put(loginSuccess(response));
-    toastService.showSuccess("Login successful");
+    toast.success("Login successful");
   } catch (error: any) {
     yield put(
       loginFailure(error instanceof Error ? error.message : "Login failed")
     );
-    toastService.showError(error?.message);
+    toast.error(error?.message);
   }
 }
 
@@ -42,14 +42,13 @@ function* signupSaga(action: PayloadAction<User>) {
   try {
     // Simulate API call
     const response: User = yield call(signUpApi.signUp, action.payload);
-    console.log("login response", response);
     yield put(loginSuccess(response));
   } catch (error: any) {
     yield put(
-      loginFailure(error instanceof Error ? error.message : "Login failed")
+      loginFailure(error instanceof Error ? error.message : "Signup failed")
     );
-    console.log("error", error.response.data.message);
-    throw new Error(error.response.data.message);
+    console.log("Error", error.message);
+    toast.error(error?.message);
   }
 }
 

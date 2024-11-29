@@ -1,9 +1,8 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import "react-phone-number-input/style.css";
-import { useNavigate, Link } from "react-router-dom";
-import { Mail, Lock, User, Phone, ArrowRight, Store } from "lucide-react";
-import { useAuth } from "../../context/AuthContext";
-import { Formik, Field, Form, FormikHelpers, ErrorMessage } from "formik";
+import { Link } from "react-router-dom";
+import { Mail, Lock, User, ArrowRight, Store } from "lucide-react";
+import { Formik, Field, Form, ErrorMessage } from "formik";
 import { UserRole } from "../../features/user/types";
 import PhoneInputField from "../../components/UiComponents/PhoneInput";
 import * as Yup from "yup";
@@ -12,9 +11,6 @@ import { signupRequest } from "../../features/auth/slice";
 import { ToastContainer } from "react-toastify";
 
 export default function Signup() {
-  const navigate = useNavigate();
-  const { signup } = useAuth();
-
   const [role, setRole] = useState<UserRole>(UserRole.BUYER);
   const dispatch = useDispatch();
 
@@ -200,7 +196,6 @@ export default function Signup() {
                   <div className="">
                     <PhoneInputField
                       {...getFieldProps("phone_number")}
-                      onChange={(e: any) => console.log(e.target.value)}
                       id="phone_number"
                       name="phone_number"
                       value={values.phone_number}

@@ -1,11 +1,14 @@
 import { Link } from "react-router-dom";
 import { Menu, Bell, User } from "lucide-react";
+import { useAuth } from "../../context/AuthContext";
 
 interface SellerNavbarProps {
   onMenuClick: () => void;
 }
 
 export default function SellerNavbar({ onMenuClick }: SellerNavbarProps) {
+  const { user } = useAuth();
+  console.log("users", user);
   return (
     <nav className="sticky top-0 bg-white shadow-md z-50">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -33,7 +36,7 @@ export default function SellerNavbar({ onMenuClick }: SellerNavbarProps) {
             </button>
             <button className="flex items-center space-x-2 px-4 py-2 rounded-lg hover:bg-gray-100">
               <User size={20} className="text-gray-600" />
-              <span className="font-medium">John's Store</span>
+              <span className="font-medium">{`${user?.firstName}'s Store`}</span>
             </button>
           </div>
         </div>

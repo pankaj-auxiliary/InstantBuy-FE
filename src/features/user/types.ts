@@ -8,10 +8,10 @@ export enum UserRole {
 
 export interface User {
   id: number;
-  first_name: string;
-  last_name?: string;
+  firstName: string;
+  lastName?: string;
   email: string;
-  phone_number: string | null;
+  phoneNumber: string | null;
   role: UserRole;
   password_last_updated_at?: DateTime;
   createdAt?: DateTime;

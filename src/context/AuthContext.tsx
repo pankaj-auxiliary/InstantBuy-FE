@@ -1,8 +1,8 @@
 import React, { createContext, useContext, useState, useEffect } from "react";
 import { AuthState } from "../types/auth";
 import { User, UserRole } from "../features/user/types";
-import { useDispatch, useSelector } from "react-redux";
-import { RootState, store } from "../app/store";
+import { useDispatch } from "react-redux";
+import { store } from "../app/store";
 import { localStorageService } from "../services/LocalStorageService";
 import { loginRequest, signupRequest } from "../features/auth/slice";
 
@@ -31,16 +31,20 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   });
   const dispatch = useDispatch();
 
+  let authToken;
+
   useEffect(() => {
     // Check for stored auth state
-    const authToken = localStorageService.getAuthToken();
+    authToken = localStorageService.getAuthToken();
     const storedUser = localStorage.getItem("user");
+    const user: User = storedUser ? JSON.parse(storedUser).data : null;
+    console.log("Auth state:", { authToken, user }, !!authToken, !!user);
 
-    if (authToken && storedUser) {
+    if (authToken && user) {
       setState((prev) => ({
         ...prev,
         isAuthenticated: true,
-        user: JSON.parse(storedUser),
+        user: user,
         loading: false,
       }));
     } else {
@@ -54,7 +58,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       const payload = { email, password };
       let user: User | null;
       // Simulate API call
-      await new Promise((resolve, reject) => {
+      await new Promise((resolve) => {
         dispatch(loginRequest(payload));
         // Assuming loginRequest is an async action, you might want to listen for the result
         // You can use a callback or a listener to resolve the promise
@@ -66,8 +70,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
               isAuthenticated: true,
               user,
               loading: false,
-            }));  
-            console.log("state", state);
+            }));
             localStorage.setItem("user", JSON.stringify(user));
             resolve(user); // Resolve with user data
             unsubscribe(); // Clean up the listener
@@ -94,20 +97,27 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   }) => {
     try {
       setState((prev) => ({ ...prev, loading: true, error: null }));
-
+      let user: User | null;
       // Simulate API call
-      await new Promise(() => dispatch(signupRequest(userData)));
-
-      const user = useSelector((state: RootState) => state.auth.user);
-
-      setState((prev) => ({
-        ...prev,
-        isAuthenticated: true,
-        user,
-        loading: false,
-      }));
-
-      localStorage.setItem("user", JSON.stringify(user));
+      await new Promise((resolve) => {
+        dispatch(signupRequest(userData));
+        // Assuming loginRequest is an async action, you might want to listen for the result
+        // You can use a callback or a listener to resolve the promise
+        const unsubscribe = store.subscribe(() => {
+          user = store.getState().auth.user;
+          if (user) {
+            setState((prev) => ({
+              ...prev,
+              isAuthenticated: true,
+              user,
+              loading: false,
+            }));
+            localStorage.setItem("user", JSON.stringify(user));
+            resolve(user); // Resolve with user data
+            unsubscribe(); // Clean up the listener
+          }
+        });
+      });
     } catch (error) {
       setState((prev) => ({
         ...prev,
@@ -130,7 +140,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   return (
     <AuthContext.Provider value={{ ...state, login, signup, logout }}>
-      {children}
+      <div>{children}</div>
     </AuthContext.Provider>
   );
 }
